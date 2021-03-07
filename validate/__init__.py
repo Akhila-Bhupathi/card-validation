@@ -1,11 +1,4 @@
-def get_cc_number():
-    if len(sys.argv) < 2:
-        usage()
-        sys.exit(1)
-
-    return sys.argv[1]
-
-
+import re
 def sum_digits(digit):
     if digit < 10:
         return digit
@@ -14,14 +7,15 @@ def sum_digits(digit):
         return sum
 
 
-def validate(cc_num):
-    # reverse the credit card number
-    cc_num=str(cc_num)
+def validate(credit_card_number):
+    
+    cc_num=str(credit_card_number)
     cc_num = cc_num[::-1]
-    # convert to integer list
+    
     cc_num = [int(x) for x in cc_num]
-    # double every second digit
+    
     doubled_second_digit_list = list()
+    
     digits = list(enumerate(cc_num, start=1))
     for index, digit in digits:
         if index % 2 == 0:
@@ -29,11 +23,27 @@ def validate(cc_num):
         else:
             doubled_second_digit_list.append(digit)
 
-    # add the digits if any number is more than 9
     doubled_second_digit_list = [sum_digits(x) for x in doubled_second_digit_list]
-    # sum all digits
     sum_of_digits = sum(doubled_second_digit_list)
-    # return True or False
+    
     return sum_of_digits % 10 == 0
 
-print(validate(79927398711))
+def check_card_type(credit_card_number):
+    
+    card_num=str(credit_card_number)
+    visa = bool(re.match("4[0-9]{12}(?:[0-9]{3})", card_num))
+    mastercard = bool(re.match("5[1-5][0-9]{14}", card_num))
+    discover = bool(re.match("6(?:011|5[0-9]{2})[0-9]{12}", card_num))
+    american_express = bool(re.match("3[47][0-9]{13}", card_num))
+
+    if(visa):
+        return "visa"
+    elif(mastercard):
+        return "mastercard"
+    elif(discover):
+        return "discover"
+    elif(american_express):
+        return "american_express"
+    
+    
+    
